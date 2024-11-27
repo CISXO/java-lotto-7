@@ -1,8 +1,6 @@
 package lotto.controller;
 
-import lotto.model.Lotto;
-import lotto.model.LottoManager;
-import lotto.model.LottoMember;
+import lotto.service.LottoService;
 import lotto.utils.constants.LottoPrize;
 import lotto.view.input.ManagerInputView;
 import lotto.view.input.MemberInputView;
@@ -11,74 +9,61 @@ import lotto.view.output.OutputView;
 import java.util.List;
 
 public class LottoController {
-
     private final MemberInputView memberInputView;
     private final ManagerInputView managerInputView;
     private final OutputView outputView;
+    private final LottoService lottoService;
 
     public LottoController() {
         this.memberInputView = new MemberInputView();
         this.managerInputView = new ManagerInputView();
         this.outputView = new OutputView();
+        this.lottoService = new LottoService();
     }
 
     public void run() {
-        Integer price = getPriceFromUser();
-        LottoManager lottoManager = new LottoManager(price);
-
-        Integer purchasedLottoTotal = lottoManager.purchaseLotto();
-        LottoMember lottoMember = createLottoMember(lottoManager);
-
-        displayPurchaseInformation(purchasedLottoTotal, lottoMember);
-
-        List<LottoPrize> resultPrize = requestStatisticsProfitAnalysis(lottoManager, lottoMember);
-        displayResults(resultPrize, lottoManager, lottoMember);
+        process(this::getPriceFromUser);
+        process(this::purchaseLotto);
+        process(this::displayPurchaseInfo);
+        process(this::getLottoNumber);
+        process(this::displayResultStatistics);
     }
 
-    private Integer getPriceFromUser() {
+    private void getPriceFromUser() {
         outputView.printGetPrice();
-        return memberInputView.getPrice();
     }
 
-    private LottoMember createLottoMember(LottoManager lottoManager) {
-        LottoMember lottoMember = new LottoMember();
-        for (Lotto lotto : lottoManager.getPurchasedLotto()) {
-            lottoMember.setPurchasedLotto(lotto);
-        }
-        return lottoMember;
+    private void purchaseLotto() {
+        lottoService.purchaseLotto(memberInputView.getPrice());
     }
 
-    private void displayPurchaseInformation(Integer purchasedLottoTotal, LottoMember lottoMember) {
-        outputView.printPurchasedLottoCount(purchasedLottoTotal);
-        outputView.printLottoPurchaseList(lottoMember.getPurchasedLotto());
+    private void displayPurchaseInfo() {
+        outputView.printPurchasedLottoCount(lottoService.getTotalLotto());
+        outputView.printLottoPurchaseList(lottoService.getPurchasedLotto());
     }
 
-    public List<LottoPrize> requestStatisticsProfitAnalysis(LottoManager lottoManager, LottoMember lottoMember) {
-        List<Integer> lottoNumbers = getWinningNumbersFromManager();
-        Integer bonusNumber = getBonusNumberFromManager();
-
-        while (!lottoManager.validateLotto(lottoNumbers, bonusNumber)) {
-            lottoNumbers = getWinningNumbersFromManager();
-            bonusNumber = getBonusNumberFromManager();
-        }
-
-        return lottoManager.isLottoResult(lottoNumbers, bonusNumber, lottoMember.getPurchasedLotto());
-    }
-
-    private List<Integer> getWinningNumbersFromManager() {
+    private void getLottoNumber() {
         outputView.printLottoNumber();
-        return managerInputView.getLottoNumbers();
-    }
-
-    private Integer getBonusNumberFromManager() {
+        List<Integer> lottoNumbers = managerInputView.getLottoNumbers();
         outputView.printLottoBonusNumber();
-        return managerInputView.getLottoBonusNumber();
+        Integer bonusNumber = managerInputView.getLottoBonusNumber();
+        lottoService.validateLotto(lottoNumbers, bonusNumber);
+        lottoService.setLottoNumber(lottoNumbers, bonusNumber);
     }
 
-    private void displayResults(List<LottoPrize> resultPrize, LottoManager lottoManager, LottoMember lottoMember) {
-        lottoMember.setLottoResult(resultPrize);
-        double resultProfitRate = lottoManager.resultProfitRate(lottoMember.getLottoResult());
+    private void displayResultStatistics() {
+        List<LottoPrize> resultPrize = lottoService.isLottoResult();
+        double resultProfitRate = lottoService.resultProfitRate();
         outputView.resultStatistics(resultPrize, resultProfitRate);
     }
 
+    private void process(Runnable action) {
+        try {
+            action.run();
+        } catch (IllegalArgumentException e) {
+            outputView.exception(e);
+            action.run();
+            throw e;
+        }
+    }
 }
