@@ -55,8 +55,7 @@ class LottoManagerTest {
         //given
         List<Integer> lottoNumbers = List.of(1, 2, 3, 4, 5,6);
         int bonusNumber = 7;
-        lottoManager.setLottoNumbers(lottoNumbers);
-        lottoManager.setLottoBonusNumber(bonusNumber);
+        lottoManager.saveWinningNumbers(lottoNumbers, bonusNumber);
         List<Lotto> purchasedLotto = new ArrayList<>();
         purchasedLotto.add(new Lotto(List.of(1, 2, 3, 4, 5, 6))); //1등
         purchasedLotto.add(new Lotto(List.of(1, 2, 3, 4, 5, 7))); //2등
