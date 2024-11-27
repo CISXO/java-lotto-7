@@ -41,8 +41,7 @@ public class LottoService {
     }
 
     public void setLottoNumber(List<Integer> lottoNumbers, Integer bonusNumber) {
-        lottoManager.setLottoNumbers(lottoNumbers);
-        lottoManager.setLottoBonusNumber(bonusNumber);
+        lottoManager.saveWinningNumbers(lottoNumbers, bonusNumber);
     }
 
     public double resultProfitRate() {
