@@ -3,13 +3,14 @@ package lotto.model;
 import lotto.utils.constants.LottoPrize;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LottoMember {
 
     private final List<Lotto> purchasedLotto;
+    private final List<LottoPrize> lottoResult;
     List<Integer> purchasedLottoNumbers = new ArrayList<>();
-    private List<LottoPrize> lottoResult;
 
     public LottoMember() {
         this.purchasedLotto = new ArrayList<>();
@@ -20,18 +21,19 @@ public class LottoMember {
         for (Lotto lotto : purchasedLotto) {
             purchasedLottoNumbers.addAll(lotto.getLottoNumbers());
         }
-        return purchasedLotto;
+        return Collections.unmodifiableList(purchasedLotto);
     }
 
-    public void setPurchasedLotto(Lotto lotto) {
+    public void addPurchasedLotto(Lotto lotto) {
         purchasedLotto.add(lotto);
     }
 
-    public void setLottoResult(List<LottoPrize> resultPrize) {
-        this.lottoResult = resultPrize;
+    public void setLottoResult(List<LottoPrize> results) {
+        lottoResult.clear();
+        lottoResult.addAll(results);
     }
 
     public List<LottoPrize> getLottoResult() {
-        return lottoResult;
+        return Collections.unmodifiableList(lottoResult);
     }
 }

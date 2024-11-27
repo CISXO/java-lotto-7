@@ -3,6 +3,7 @@ package lotto.model;
 import lotto.utils.validator.LottoValidator;
 import lotto.utils.validator.Validator;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Lotto {
@@ -16,7 +17,7 @@ public class Lotto {
     }
 
     public List<Integer> getLottoNumbers() {
-        return numbers;
+        return Collections.unmodifiableList(numbers);
     }
 
     @Override
