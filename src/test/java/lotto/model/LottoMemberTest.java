@@ -25,8 +25,8 @@ class LottoMemberTest {
         Lotto lotto2 = new Lotto(Arrays.asList(7, 8, 9, 10, 11, 12));
 
         // when: 로또를 구매 목록에 추가
-        lottoMember.setPurchasedLotto(lotto1);
-        lottoMember.setPurchasedLotto(lotto2);
+        lottoMember.addPurchasedLotto(lotto1);
+        lottoMember.addPurchasedLotto(lotto2);
 
         // then: 구매한 로또 목록이 정확히 두 개의 로또를 포함해야 함
         List<Lotto> purchasedLotto = lottoMember.getPurchasedLotto();

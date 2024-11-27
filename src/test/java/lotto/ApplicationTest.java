@@ -62,7 +62,7 @@ class ApplicationTest extends NsTest {
     void 예외_테스트2() {
         assertSimpleTest(() -> {
             runException("100009");
-            assertThat(output()).contains(ERROR_MESSAGE);
+            assertThat(output()).contains("구입금액을 입력해 주세요.");
         });
     }
 

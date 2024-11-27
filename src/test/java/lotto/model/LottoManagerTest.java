@@ -24,7 +24,8 @@ class LottoManagerTest {
     @DisplayName("로또를 구매하고 개수 확인")
     void 로또를_구매하고_개수확인() {
         //given
-        int numberOfLotto = lottoManager.purchaseLotto();
+        lottoManager.purchaseLotto();
+        int numberOfLotto = lottoManager.getTotalLotto();
 
         assertThat(numberOfLotto).isEqualTo(1);
         assertThat(lottoManager.getPurchasedLotto()).hasSize(1);
@@ -54,6 +55,8 @@ class LottoManagerTest {
         //given
         List<Integer> lottoNumbers = List.of(1, 2, 3, 4, 5,6);
         int bonusNumber = 7;
+        lottoManager.setLottoNumbers(lottoNumbers);
+        lottoManager.setLottoBonusNumber(bonusNumber);
         List<Lotto> purchasedLotto = new ArrayList<>();
         purchasedLotto.add(new Lotto(List.of(1, 2, 3, 4, 5, 6))); //1등
         purchasedLotto.add(new Lotto(List.of(1, 2, 3, 4, 5, 7))); //2등
@@ -63,7 +66,7 @@ class LottoManagerTest {
         purchasedLotto.add(new Lotto(List.of(1, 2, 7, 12, 18, 20))); //제로
 
         //when
-        List<LottoPrize> resultPrize = lottoManager.isLottoResult(lottoNumbers, bonusNumber, purchasedLotto);
+        List<LottoPrize> resultPrize = lottoManager.isLottoResult(purchasedLotto);
 
         //then
 
