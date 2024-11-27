@@ -71,4 +71,8 @@ public class OutputView {
         printMessage(String.format(OutputMessages.MATCH_5_BONUS_OUTPUT.getMessage(), prizeCountMap.get(LottoPrize.LOTTO_MATCH_2ND)));
         printMessage(String.format(OutputMessages.MATCH_6_OUTPUT.getMessage(), prizeCountMap.get(LottoPrize.LOTTO_MATCH_1ST)));
     }
+
+    public void exception(IllegalArgumentException e) {
+        printMessage("[ERROR]: " + e.getMessage());
+    }
 }
